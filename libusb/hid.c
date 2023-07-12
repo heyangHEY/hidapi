@@ -779,7 +779,8 @@ struct hid_device_info  HID_API_EXPORT *hid_enumerate(unsigned short vendor_id, 
 				for (k = 0; k < intf->num_altsetting; k++) {
 					const struct libusb_interface_descriptor *intf_desc;
 					intf_desc = &intf->altsetting[k];
-					if (intf_desc->bInterfaceClass == LIBUSB_CLASS_HID) {
+					if ((intf_desc->bInterfaceClass == LIBUSB_CLASS_HID)
+						|| (intf_desc->bInterfaceClass == LIBUSB_CLASS_VENDOR_SPEC)) {
 						struct hid_device_info *tmp;
 
 						res = libusb_open(dev, &handle);
@@ -1162,7 +1163,8 @@ hid_device * HID_API_EXPORT hid_open_path(const char *path)
 			const struct libusb_interface *intf = &conf_desc->interface[j];
 			for (k = 0; k < intf->num_altsetting && !good_open; k++) {
 				const struct libusb_interface_descriptor *intf_desc = &intf->altsetting[k];
-				if (intf_desc->bInterfaceClass == LIBUSB_CLASS_HID) {
+				if ((intf_desc->bInterfaceClass == LIBUSB_CLASS_HID)
+					|| (intf_desc->bInterfaceClass == LIBUSB_CLASS_VENDOR_SPEC)) {
 					char dev_path[64];
 					get_path(&dev_path, usb_dev, conf_desc->bConfigurationValue, intf_desc->bInterfaceNumber);
 					if (!strcmp(dev_path, path)) {
